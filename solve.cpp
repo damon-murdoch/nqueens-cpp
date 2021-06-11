@@ -21,7 +21,7 @@ int bestFirstSearch(Board * boardPtr, int range, int escape)
     // If the escape range is set
     // and the false moves counter
     // is greater than the limit
-    if (escape && f > escape)
+    if (escape > 0 && f > escape)
     {
       // Break out of the loop
       break;

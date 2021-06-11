@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
 
     board->print();
 
-    bestFirstSearch(board, board->getSize(),pow(10, board->getSize()));
+    bestFirstSearch(board, board->getSize(),-1);
 
     cout << "Final H: " << board->getHeuristic() << endl;
 

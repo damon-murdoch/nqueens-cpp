@@ -29,6 +29,12 @@ Board::Board(int size)
   }
 }
 
+int Board::getSize()
+{
+  // Return the size of the queens list
+  return this->queens.size();
+}
+
 int Board::getHeuristic()
 {
   // Check every queen against every other queen
@@ -47,7 +53,11 @@ int Board::getHeuristic()
       if (compare(&(this->queens.at(i)),&(this->queens.at(j))))
       {
         // Increment the 'h' value
-        h++;
+        // Want to increase by 99, because
+        // Having two queens in the same spot is an 
+        // impossible state and we want to avoid this 
+        // at all costs!
+        h += 99;
       }
 
       // If the queens 'x' location is the same

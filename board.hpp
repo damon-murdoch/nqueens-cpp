@@ -18,6 +18,7 @@ class Board
   std::vector<Point>queens;
   Board(int size);
   int getHeuristic();
+  int getSize();
   void print();
 };
 

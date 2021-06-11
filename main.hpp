@@ -2,6 +2,7 @@
 #define __MAIN__HPP
 
 #include <iostream>
+#include <chrono>
 
 #include "board.hpp"
 #include "solve.hpp"

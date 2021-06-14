@@ -39,78 +39,94 @@ int main(int argc, char ** argv)
     int end = 32;
 
     // Number of repetitions before giving up on a state
-    int fail = pow(2, 19);
+    int fail = pow(2, 12);
 
     // Run 100 tests for each size
     int tests = 100; 
 
-    int overall_acc = 0;
-    int overall_avg = 0;
-    int overall_time = 0;
-    int overall_tests = (end - start + 1) * tests;
-   
     // Size Parameter
     for(int i = start; i <= end; i++)
     {
       // Increment every time we find '0'
-      int success = 0;
+      int successBfs = 0;
+      int successAnn = 0;
 
       // Average final board state
-      int avg = 0;
+      int avgBfs = 0;
+      int avgAnn = 0;
 
       // Average time taken (microseconds)
-      int time = 0;
+      int timeBfs = 0;
+      int timeAnn = 0;
 
       // Number of tests
       for(int j = 0; j < tests; j++)
       {
+        // Best First Search
+
         // Record starting clock time
-        auto start = chrono::high_resolution_clock::now();
+        auto startBfs = chrono::high_resolution_clock::now();
 
         // Create a new board of the specified size
-        Board * board = new Board(i);
+        Board * boardBfs = new Board(i);
 
         // Use the best first search algorithm to solve the board
-        int result = bestFirstSearch(board, board->getSize(),1000000);
+        int resultBfs = bestFirstSearch(boardBfs, boardBfs->getSize(),fail);
 
         // Record ending clock time
-        auto end = chrono::high_resolution_clock::now();
+        auto endBfs = chrono::high_resolution_clock::now();
 
         // Difference between start time and end time
-        auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+        auto durationBfs = chrono::duration_cast<chrono::milliseconds>(endBfs - startBfs);
 
-        // Add the number of milliseconds to the total time
-        time += duration.count();
-
-        // cout << duration.count() << endl;
+        // Add the best first search duration to the total annealing time
+        timeBfs += durationBfs.count();
 
         // If result is 0, increment successes
-        if (result == 0) success++;
-
-        // Add result to the average
-        avg += result;
+        if (resultBfs == 0) successBfs++;
       }
-
-      // Add the current sucess count
-      // and current average remainder 
-      // to the overall counter
-
-      overall_acc += success;
-      overall_avg += avg;
-      overall_time += time;
 
       // Write the results to the output stream
 
-      cout << "Accuracy for " << i << ": " << (((float)success / (float)tests) * 100); 
-      cout << "% (" << success << "/" << tests << ")" << ", Avg. Result: "; 
-      cout << ((float)avg / (float)tests) << ", Avg. Time: ";
-      cout << ((float)time / (float)tests) << "ms" << endl;
-    }
+      cout << "Best First Search (" << i << "): " << (((float)successBfs / (float)tests) * 100); 
+      cout << "% (" << successBfs << "/" << tests << ")" << ", Avg. Result: "; 
+      cout << ((float)avgBfs / (float)tests) << ", Avg. Time: ";
+      cout << ((float)timeBfs / (float)tests) << "ms" << endl;
 
-    cout << "Overall accuracy: " << (((float)overall_acc / (float)overall_tests) * 100);
-    cout << "% (" << overall_acc << "/" << overall_tests << ")" << ", Avg. Result: ";
-    cout << ((float)overall_avg / (float)overall_tests) << ", Avg. Time: ";
-      cout << ((float)overall_time / (float)overall_tests) << "ms" << endl;
+      // Number of tests
+      for(int j = 0; j < tests; j++)
+      {
+        // Simulated Annealing
+
+        // Record starting clock time
+        auto startAnn = chrono::high_resolution_clock::now();
+
+        // Create a new board of the specified size
+        Board * boardAnn = new Board(i);
+
+        // Use the best first search algorithm to solve the board
+        int resultAnn = simulatedAnnealing(boardAnn, boardAnn->getSize(), 10.0, 0.99);
+
+        // Record ending clock time
+        auto endAnn = chrono::high_resolution_clock::now();
+
+        // Difference between start time and end time
+        auto durationAnn = chrono::duration_cast<chrono::milliseconds>(endAnn - startAnn);
+
+        // Add the annealing duration to the total annealing time
+        timeAnn += durationAnn.count();
+
+        // If result is 0, increment successes
+        if (resultAnn == 0) successAnn++;
+      }
+
+      // Write the results to the output stream
+
+      cout << "Annealing Search (" << i << "): " << (((float)successAnn / (float)tests) * 100); 
+      cout << "% (" << successAnn << "/" << tests << ")" << ", Avg. Result: "; 
+      cout << ((float)avgAnn / (float)tests) << ", Avg. Time: ";
+      cout << ((float)timeAnn / (float)tests) << "ms" << endl;
+    }
   }
 
   return 0;

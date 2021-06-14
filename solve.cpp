@@ -38,23 +38,35 @@ int bestFirstSearch(Board * boardPtr, int range, int escape)
     vector<Point> moves;
 
     // Loop over the possible movements
-    for(int i=1; i <= range; i++)
+    for(int i = 1; i <= range; i++)
     {
+      // If space right is on the grid
       if((q->x + i) < boardPtr->getSize())
       {
-        moves.push_back(Point::Point(q->x + i, q->y));
+        // If space right is not occupied, add to list
+        Point pRight = Point::Point(q->x + i, q->y);
+        if (!boardPtr->at(&pRight)){moves.push_back(pRight);}
       }
+      // If space left is on the grid
       if((q->x - i) >= 0)
       {
-        moves.push_back(Point::Point(q->x - i, q->y));
+        // If space left is not occupied, add to list
+        Point pLeft = Point::Point(q->x - i, q->y);
+        if (!boardPtr->at(&pLeft)){moves.push_back(pLeft);}
       }
+      // If space down is on the grid
       if((q->y + i) < boardPtr->getSize())
       {
-        moves.push_back(Point::Point(q->x, q->y + i));
+        // If space down is not occupied, add to list
+        Point pDown = Point::Point(q->x, q->y + i);
+        if (!boardPtr->at(&pDown)){moves.push_back(pDown);}
       }
+      // If space up is on the grid
       if((q->y - i) >= 0)
       {
-        moves.push_back(Point::Point(q->x, q->y - i));
+        // If space up is not occupied, add to list
+        Point pUp = Point::Point(q->x, q->y - i);
+        if (!boardPtr->at(&pUp)){moves.push_back(pUp);}
       }
     }
 
@@ -156,21 +168,33 @@ int simulatedAnnealing(Board * boardPtr, int range, double temp, double cool)
     // Loop over the possible movements
     for(int i = 1; i <= range; i++)
     {
+      // If space right is on the grid
       if((q->x + i) < boardPtr->getSize())
       {
-        moves.push_back(Point::Point(q->x + i, q->y));
+        // If space right is not occupied, add to list
+        Point pRight = Point::Point(q->x + i, q->y);
+        if (!boardPtr->at(&pRight)){moves.push_back(pRight);}
       }
+      // If space left is on the grid
       if((q->x - i) >= 0)
       {
-        moves.push_back(Point::Point(q->x - i, q->y));
+        // If space left is not occupied, add to list
+        Point pLeft = Point::Point(q->x - i, q->y);
+        if (!boardPtr->at(&pLeft)){moves.push_back(pLeft);}
       }
+      // If space down is on the grid
       if((q->y + i) < boardPtr->getSize())
       {
-        moves.push_back(Point::Point(q->x, q->y + i));
+        // If space down is not occupied, add to list
+        Point pDown = Point::Point(q->x, q->y + i);
+        if (!boardPtr->at(&pDown)){moves.push_back(pDown);}
       }
+      // If space up is on the grid
       if((q->y - i) >= 0)
       {
-        moves.push_back(Point::Point(q->x, q->y - i));
+        // If space up is not occupied, add to list
+        Point pUp = Point::Point(q->x, q->y - i);
+        if (!boardPtr->at(&pUp)){moves.push_back(pUp);}
       }
     }
 
@@ -210,8 +234,6 @@ int simulatedAnnealing(Board * boardPtr, int range, double temp, double cool)
         // index
         index = it - moves.begin(); 
       }
-
-      // cout << exp( - (now - h) / curTemp) << endl;
     }
 
     // If the index has not been changed

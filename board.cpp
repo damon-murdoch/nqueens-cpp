@@ -21,11 +21,18 @@ Board::Board(int size)
   // Vector of array points
   this->queens = vector::vector<Point>();
 
-  // Repeat for 'size' times
-  for(int i=0; i<size; i++)
+  // Keep going until the array is full
+  while(this->queens.size() < size)
   {
-    // Add a random queen to the list 
-    this->queens.push_back(Point::Point(rand() % size, rand() % size));
+    // Create a new random queen
+    Point p = Point::Point(rand() % size, rand() % size);
+
+    // If the queen is not a duplicate
+    if (!this->at(&p))
+    {
+      // Add a random queen to the list
+      this->queens.push_back(p);
+    }
   }
 }
 
@@ -86,6 +93,33 @@ int Board::getHeuristic()
   }
 
   return h;
+}
+
+bool Board::at(Point * p)
+{
+  // Create an iterator for the moves list
+  std::vector<Point>::iterator it = this->queens.begin();
+
+  // Loop over the iterator of the list
+  for(; it < this->queens.end(); it++)
+  {
+    // Compare the current index to the provided points
+
+    // If the value is true, return true
+    if (compare(p, &(*it)) == true) return true;
+  }
+
+  // No comparison was correct, return false
+  return false;
+}
+
+bool Board::at(int x, int y)
+{
+  // Create a temporary variable for the given point
+  Point p = Point::Point(x, y);
+
+  // Return the result of the comparison
+  return this->at(&p);
 }
 
 void Board::print()

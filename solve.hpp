@@ -13,7 +13,4 @@ int bestFirstSearch(Board * boardPtr, int range, int escape);
 // simulatedAnnealing(board: *Board, range: int): int
 int simulatedAnnealing(Board * boardPtr, int range, double temp, double cool);
 
-// geneticAlgorithm(board: *Board, )
-int geneticAlgorithm(): int
-
 #endif //__SOLVE__HPP

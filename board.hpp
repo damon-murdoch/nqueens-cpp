@@ -19,6 +19,8 @@ class Board
   Board(int size);
   int getHeuristic();
   int getSize();
+  bool at(Point * p);
+  bool at(int x, int y);
   void print();
 };
 

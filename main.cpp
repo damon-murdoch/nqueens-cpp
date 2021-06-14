@@ -93,6 +93,8 @@ int main(int argc, char ** argv)
       cout << ((float)avgBfs / (float)tests) << ", Avg. Time: ";
       cout << ((float)timeBfs / (float)tests) << "ms" << endl;
 
+      /*
+
       // Number of tests
       for(int j = 0; j < tests; j++)
       {
@@ -126,6 +128,7 @@ int main(int argc, char ** argv)
       cout << "% (" << successAnn << "/" << tests << ")" << ", Avg. Result: "; 
       cout << ((float)avgAnn / (float)tests) << ", Avg. Time: ";
       cout << ((float)timeAnn / (float)tests) << "ms" << endl;
+      */
     }
   }
 

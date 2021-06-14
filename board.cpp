@@ -53,20 +53,6 @@ int Board::getHeuristic()
   {
     for(int j = i + 1; j<this->queens.size(); j++)
     {
-      // Do not check queen against itself
-      //if (i == j) continue;
-
-      // If the queens are overlapping
-      if (compare(&(this->queens.at(i)),&(this->queens.at(j))))
-      {
-        // Increment the 'h' value
-        // Want to increase by 99, because
-        // Having two queens in the same spot is an 
-        // impossible state and we want to avoid this 
-        // at all costs!
-        h += 99;
-      }
-
       // If the queens 'x' location is the same
       else if (this->queens.at(i).x == this->queens.at(j).x)
       {

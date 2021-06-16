@@ -36,7 +36,7 @@ int main(int argc, char ** argv)
     // Demo: Test all from 4 -> 32 100 times each, and get an accuracy %
 
     int start = 4;
-    int end = 32;
+    int end = 16;
 
     // Number of repetitions before giving up on a state
     int fail = pow(2, 12);
@@ -50,14 +50,17 @@ int main(int argc, char ** argv)
       // Increment every time we find '0'
       int successBfs = 0;
       int successAnn = 0;
+      int successGen = 0;
 
       // Average final board state
       int avgBfs = 0;
       int avgAnn = 0;
+      int avgGen = 0;
 
       // Average time taken (microseconds)
       int timeBfs = 0;
       int timeAnn = 0;
+      int timeGen = 0;
 
       // Number of tests
       for(int j = 0; j < tests; j++)
@@ -72,6 +75,9 @@ int main(int argc, char ** argv)
 
         // Use the best first search algorithm to solve the board
         int resultBfs = bestFirstSearch(boardBfs, boardBfs->getSize(),fail);
+
+        // Add to the average final result
+        avgBfs += resultBfs;
 
         // Record ending clock time
         auto endBfs = chrono::high_resolution_clock::now();
@@ -93,8 +99,6 @@ int main(int argc, char ** argv)
       cout << ((float)avgBfs / (float)tests) << ", Avg. Time: ";
       cout << ((float)timeBfs / (float)tests) << "ms" << endl;
 
-      /*
-
       // Number of tests
       for(int j = 0; j < tests; j++)
       {
@@ -108,6 +112,9 @@ int main(int argc, char ** argv)
 
         // Use the best first search algorithm to solve the board
         int resultAnn = simulatedAnnealing(boardAnn, boardAnn->getSize(), 10.0, 0.99);
+
+        // Add to the average final result
+        avgAnn += resultAnn;
 
         // Record ending clock time
         auto endAnn = chrono::high_resolution_clock::now();
@@ -128,7 +135,43 @@ int main(int argc, char ** argv)
       cout << "% (" << successAnn << "/" << tests << ")" << ", Avg. Result: "; 
       cout << ((float)avgAnn / (float)tests) << ", Avg. Time: ";
       cout << ((float)timeAnn / (float)tests) << "ms" << endl;
-      */
+
+      // Number of tests
+      for(int j = 0; j < tests; j++)
+      {
+        // Genetic Algorithm
+
+        // Record starting clock time
+        auto startGen = chrono::high_resolution_clock::now();
+
+        // Create a new board of the specified size
+        Board * boardGen = new Board(i);
+
+        // Use the best first search algorithm to solve the board
+        int resultGen = geneticAlgorithm(boardGen, boardGen->getSize() / 2, 10, fail);
+
+        // Add to the average final result
+        avgGen += resultGen;
+
+        // Record ending clock time
+        auto endGen = chrono::high_resolution_clock::now();
+
+        // Difference between start time and end time
+        auto durationGen = chrono::duration_cast<chrono::milliseconds>(endGen - startGen);
+
+        // Add the annealing duration to the total annealing time
+        timeGen += durationGen.count();
+
+        // If result is 0, increment successes
+        if (resultGen == 0) successGen++;
+      }
+
+      // Write the results to the output stream
+
+      cout << "Genetic Algortithm (" << i << "): " << (((float)successGen / (float)tests) * 100); 
+      cout << "% (" << successGen << "/" << tests << ")" << ", Avg. Result: "; 
+      cout << ((float)avgGen / (float)tests) << ", Avg. Time: ";
+      cout << ((float)timeGen / (float)tests) << "ms" << endl;
     }
   }
 

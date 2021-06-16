@@ -152,8 +152,8 @@ int simulatedAnnealing(Board * boardPtr, int range, double temp, double cool)
   // Current temperature
   double curTemp = temp;
 
-  // While the temperature is greater than 0
-  while (curTemp > 0.00001)
+  // While the temperature is greater than 1
+  while (curTemp > 0.001)
   {
     // Get a pointer to a random queen
     Point * q = &(boardPtr->queens.at(rand() % boardPtr->getSize()));
@@ -212,7 +212,7 @@ int simulatedAnnealing(Board * boardPtr, int range, double temp, double cool)
     random_shuffle(moves.begin(), moves.end());
 
     // Create an iterator for the moves list
-    std::vector<Point>::iterator it = moves.begin();
+    vector<Point>::iterator it = moves.begin();
 
     // Loop over the iterator
     for(; it != moves.end(); ++it)
@@ -256,6 +256,90 @@ int simulatedAnnealing(Board * boardPtr, int range, double temp, double cool)
     // Reduce the temperature by the cooling factor
     curTemp *= cool;
   }
+
+  // If the heuristic is greater than zero, run
+  // a heuristic search to finish up the search
+  if (h > 0) bestFirstSearch(boardPtr, range, temp);
+
+  // Return the heuristic
+  return h;
+}
+
+// geneticAlgorithm(board: *boardPtr, range: int): int
+int geneticAlgorithm(Board * boardPtr, int range, int population, int generations)
+{
+  // Get the current collisions in the board
+  int h = boardPtr->getHeuristic();
+
+  // Generation Counter
+  int g = 0;
+
+  // Size counter
+  int size = boardPtr->getSize();
+
+  // Create empty board array
+  vector<Board> boards;
+
+  // Loop over the population count
+  while(boards.size() < population)
+  {
+    // Add a clone of the current board to the list
+    boards.push_back(Board::Board(boardPtr));
+  }
+
+  // While the heuristic cost is greater than zero, AND
+  // we have not passed the generational limit (if it exists)
+  while(h > 0 && (!generations || (g < generations)))
+  {
+    // Half of the population is kept each generation 
+    // and half of the population is thrown away
+
+    // Loop over all of the elements in the population
+    for(int i=0; i<population; i++)
+    {
+      // Add a modified copy of the board at the 
+      // current index to the back of the vector
+      boards.push_back(Board::Board(&(boards[i])));
+
+      // Get the partner index
+      // Partner is the last element of the array
+      int p = population - i - 1;
+
+      for(int j=0; j<range; j++)
+      {
+        // Crossover 'j' from a 'j' in the partner
+        Point point = Point::Point(boards.at(p).queens.at(j));
+
+        // If the select point is not a duplicate, accept the crossover
+        if (!(boards.back().at(&point)))
+        {
+          // Replace the existing queen with the crossover queen
+          boards.back().queens.at(j) = point;
+        }
+      }
+
+      // Perform a heuristic search on the board state
+      bestFirstSearch(&(boards.back()), size, size);
+      
+      // Break out of the loop if we have found a solution
+      if (boards.back().getHeuristic() == 0) break;
+    }
+
+    // Sort the vector using the heuristic
+    sort(boards.begin(), boards.end(), compare_h);
+
+    // Reset the size of the vector to the population size
+    boards.resize(population);
+
+    // Update the current best heuristic with the first (best) element
+    h = boards.front().getHeuristic();
+
+    // Increment the generations counter
+    g++;
+  }
+
+  // Update the starting board with the best result
+  *boardPtr = Board::Board(&(boards.front()));
 
   // Return the heuristic
   return h;

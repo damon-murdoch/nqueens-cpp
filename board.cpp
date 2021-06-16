@@ -10,10 +10,22 @@ bool compare(Point * a, Point * b)
   return (a -> x == b -> x) && (a -> y == b -> y);
 }
 
+Point::Point()
+{
+  this->x = 0; 
+  this->y = 0;
+}
+
 Point::Point(int x, int y)
 {
   this->x = x;
   this->y = y;
+}
+
+bool compare_h(Board a, Board b)
+{
+  // Compare function, return if 'a' is less costly than 'b'.
+  return a.getHeuristic() < b.getHeuristic();
 }
 
 Board::Board(int size)
@@ -36,6 +48,18 @@ Board::Board(int size)
   }
 }
 
+Board::Board(Board * other)
+{
+  // Create a clone of the existing boards array
+  this->queens = vector::vector<Point>(other->queens);  
+}
+
+Board::Board()
+{
+  // Create an empty queens array
+  this->queens = vector::vector<Point>();
+}
+
 int Board::getSize()
 {
   // Return the size of the queens list
@@ -54,7 +78,7 @@ int Board::getHeuristic()
     for(int j = i + 1; j<this->queens.size(); j++)
     {
       // If the queens 'x' location is the same
-      else if (this->queens.at(i).x == this->queens.at(j).x)
+      if (this->queens.at(i).x == this->queens.at(j).x)
       {
         // Increment the 'h' value
         h++;
